@@ -69,36 +69,73 @@ rls_err <- function(x,y){
   e=y-(b1*x+b0)
   return(e)
 }
+
+rls_cd <- function(x,y){
+  b0=rls(x,y)[1]
+  b1=rls(x,y)[2]
+  graphics.off()
+  y_est=b1*x+b0
+  SCE=sum((y-y_est)^2)
+  STCC=sum((y-mean(y))^2)
+  R2=1-SCE/STCC
+  return(R2)
+}
 ```
 ![](p1.png)
 ```{r}
-x_k=log(K$Area)
-y_k=K$Population
-rls(x_k,y_k)
+x_K=log(K$Area)
+y_K=K$Population
+rls(x_K,y_K)
 ```
 ![](p1a.png)
 ```{r}
-e=rls_err(x_k,y_k)
-mean(e) #Valor promedio del residuo
-plot(x_k,e,col='red')  #Scatterplot de la distribución del error
+e_K=rls_err(x_K,y_K)
+sprintf("Valor promedio del residuo: %s", mean(e_K))
+plot(x_K,e_K,col='red')  #Scatterplot de la distribución del error
 abline(h=0,col='green')
-segments(x_k,0,x_k,e)  
+segments(x_K,0,x_K,e_K)  
 ```
 ```{r}
-boxplot(rls_err(x_k,y_k)) #Boxplot de la distribución del error
+boxplot(rls_err(x_K,y_K)) #Boxplot de la distribución del error
 ```
 ![](p1b.png)
 ```{r}
-
+sprintf("Varianza de la variable independiente: %s", var(x_K))
+sprintf("Coeficiente de determinación: %s", rls_cd(x_K,y_K))
+sprintf("Varianza residual: %s", rls_var(x_K,y_K)[2])
+graphics.off()
 ```
 ![](p1c.png)
 ```{r}
-
+#
 ```
 ![](p1d.png)
 ```{r}
-
+x_k=log(K$Area[K$Population<=10000])
+y_k=K$Population[K$Population<=10000]
+mx=mean(x_k)
+my=mean(y_k)
+b1=sum((x_k-mx)*(y_k-my))/sum((x_k-mx)^2)
+b0=my-b1*mx
+plot(x_K,y_K, xlim=c(min(0,x_K),max(x_K)),ylim=c(min(floor(b0),y_K),ceiling(max(y_K))))
+mtext(paste0('y=',round(b0,6),'+',round(b1,6),'x'), side = 3)
+curve(b0+b1*x,add=TRUE,col='red')
 ```
+```{r}
+sprintf("Coeficiente de determinación: %s", rls_cd(x_k,y_k))
+n=length(x_K)
+e2=sum((y_K-(b1*x_K+b0))^2)
+sprintf("Varianza residual: %s", e2/(n-2))
+b0=rls(x_k,y_k)[1]
+b1=rls(x_k,y_k)[2]
+e_k=y_K-(b1*x_K+b0)
+sprintf("Valor promedio del residuo: %s", mean(e_k))
+graphics.off()
+plot(x_K,e_k,col='red')  #Scatterplot de la distribución del error
+abline(h=0,col='green')
+segments(x_K,0,x_K,e_k)  
+```
+
 ![](p2.png)
 ```{r}
 
