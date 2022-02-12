@@ -4,6 +4,8 @@ output: html_notebook
 ---
 
 **Daniel Alejandro Leon Ortiz - 2190064**
+
+**Yesid Romario Gualdrón Hurtado - 2190052**
 ```{r}
 K=read.table(file='kittiwak.txt',header=TRUE)
 P=read.table(file='physical.txt',header=TRUE)
@@ -94,7 +96,7 @@ rls(x_K,y_K)
 ![](p1a.png)
 ```{r}
 e_K=rls_err(x_K,y_K)
-sprintf("Valor promedio del residuo: %s", mean(e_K))
+sprintf("Valor promedio del residuo: %s", mean(abs(e_K)))
 plot(x_K,e_K,col='red')  #Scatterplot de la distribución del error
 abline(h=0,col='green')
 segments(x_K,0,x_K,e_K)  
@@ -133,7 +135,7 @@ sprintf("Varianza residual: %s", e2/(n-2))
 b0=rls(x_k,y_k)[1]
 b1=rls(x_k,y_k)[2]
 e_k=y_K-(b1*x_K+b0)
-sprintf("Valor promedio del residuo: %s", mean(e_k))
+sprintf("Valor promedio del residuo: %s", mean(abs(e_k)))
 graphics.off()
 plot(x_K,e_k,col='red')  #Scatterplot de la distribución del error
 abline(h=0,col='green')
