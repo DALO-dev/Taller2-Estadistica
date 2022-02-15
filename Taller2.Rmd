@@ -8,6 +8,7 @@ output: html_notebook
 **Yesid Romario Gualdrón Hurtado - 2190052**
 
 **Daniel Adrián González Buendía - 2191943**
+
 ```{r}
 K=read.table(file='kittiwak.txt',header=TRUE)
 P=read.table(file='physical.txt',header=TRUE)
