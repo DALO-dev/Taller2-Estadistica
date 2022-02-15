@@ -68,6 +68,19 @@ rls_ci <- function(x,y,ci){
   return(list('b0'=c(l_b0,u_b0),'b1'=c(l_b1,u_b1)))
 }
 
+rls_icp <- function(x,y,ci,x0){
+  n=length(x)
+  S2X = var(x)
+  S2R = rls_var(x,y)[2] #Usando la varianza residual insesgada
+  if (n>=30)
+    q=qnorm((1-ci)/2,lower.tail = 0)
+  else
+    q=qt((1-ci)/2,df=n-2,lower.tail = 0)
+  graphics.off()
+  icp=q*sqrt(S2R*(1+1/n+((x0-mean(x))^2/((n-1)*S2R))))
+  return('intervalo'=icp)
+}
+
 rls_err <- function(x,y){
   b0=rls(x,y)[1]
   b1=rls(x,y)[2]
@@ -94,6 +107,7 @@ rls_cd <- function(x,y){
 x_K=log(K$Area)
 y_K=K$Population
 rls(x_K,y_K)
+model <- lm(y_K~x_K)
 ```
 ![](p1a.png)
 ```{r}
@@ -108,7 +122,7 @@ boxplot(rls_err(x_K,y_K)) #Boxplot de la distribución del error
 ```
 ![](p1b.png)
 ```{r}
-sprintf("Varianza de la variable independiente: %s", var(x_K))
+sprintf("Varianza de la variable independiente: %s", rls_var(x_K,y_K)[1])
 sprintf("Coeficiente de determinación: %s", rls_cd(x_K,y_K))
 sprintf("Varianza residual: %s", rls_var(x_K,y_K)[2])
 graphics.off()
@@ -116,7 +130,16 @@ graphics.off()
 ![](p1c.png)
 ```{r}
 #
+x_icp = c(1:10:100)
+plot(x_icp, rls_icp(x_K, y_K, 0.95, x_icp))
+mean(x_K)
 ```
+
+Encontramos que el ajuste que proporciona la regreción lineal no es muy bueno basandonos en el coeficiente de determinación.
+Tambien encontramos, como se puede ver en la gráfica, que para islas pequeñas los intervalos de confianza son pequeño y para las islas grandes crece este intervalo.
+Esto nos indica que para hacer una predicción con una confianza del 95% no podremos acotar las respuestas en un intervalo pequeño.
+
+
 ![](p1d.png)
 ```{r}
 x_k=log(K$Area[K$Population<=10000])
@@ -143,6 +166,8 @@ plot(x_K,e_k,col='red')  #Scatterplot de la distribución del error
 abline(h=0,col='green')
 segments(x_K,0,x_K,e_k)  
 ```
+
+
 
 ![](p2.png)
 ```{r}
