@@ -6,6 +6,8 @@ output: html_notebook
 **Daniel Alejandro Leon Ortiz - 2190064**
 
 **Yesid Romario Gualdrón Hurtado - 2190052**
+
+**Daniel Adrián González Buendía - 2191943**
 ```{r}
 K=read.table(file='kittiwak.txt',header=TRUE)
 P=read.table(file='physical.txt',header=TRUE)
@@ -146,7 +148,7 @@ segments(x_K,0,x_K,e_k)
 ```{r}
 y_2 = P$Mass
 info_2 = lm(y_2~P$Fore+P$Bicep+P$Chest+P$Neck+P$Shoulder+P$Waist+P$Height+P$Calf+P$Thigh+P$Head)
-summary(info_2)
+print(info_2$coefficients)
 ```
 ![](p2a.png)
 ```{r}
