@@ -78,7 +78,7 @@ rls_icp <- function(x,y,ci,x0){
   else
     q=qt((1-ci)/2,df=n-2,lower.tail = 0)
   graphics.off()
-  icp=q*sqrt(S2R*(1+1/n+((x0-mean(x))^2/((n-1)*S2R))))
+  icp=c(q*sqrt(S2R*(1+1/n+((x0-mean(x))^2/((n-1)*S2R)))))
   return('intervalo'=icp)
 }
 
@@ -134,8 +134,12 @@ En este caso se usa el estimador de máxima verosimilitud para hacer el cálculo
 ![](p1c.png)
 ```{r}
 #
-x_icp = c(1:10:100)
-plot(x_icp, rls_icp(x_K, y_K, 0.95, x_icp))
+x_icp <- seq(1, 100, length = 10)
+y_icp <- c()
+for(x_value in x_icp){
+  y_icp <- c(y_icp, rls_icp(x_K, y_K, 0.95, x_value))
+}
+plot(x_icp, y_icp)
 mean(x_K)
 ```
 
@@ -200,7 +204,7 @@ segments(y_2_2,0,y_2_2,info_2_2$residual)
 #abline(h=0,col='green')
 #segments(y_2,0,y_2,info_2_2$residual)
 ```
-Se observa que el valor del residuo no cambia si se le saca la raiz cúbica a la variable dependiente pero si los valores de $y$.
+Encontramos que aunque la distribución de los residuos es la misma, el valor de $y$ se reduce mucho en la segunda gráfica lo que indica que esta gráfica provee una mejor regresión para los datos dados
 ![](p2c.png)
 ```{r}
 boxplot(info_2$residuals)
