@@ -118,9 +118,11 @@ plot(x_K,e_K,col='red')  #Scatterplot de la distribución del error
 abline(h=0,col='green')
 segments(x_K,0,x_K,e_K)  
 ```
+Se observa que los residuos en su mayoría son bajos a excepción de dos valores atípicos y otros que están un poco dispersos.
 ```{r}
 boxplot(rls_err(x_K,y_K)) #Boxplot de la distribución del error
 ```
+Se pueden observar más claramente esos valores atípicos y la mediana que tiene un valor negativo cercano a cero.
 ![](p1b.png)
 ```{r}
 sprintf("Varianza de la variable independiente: %s", rls_var(x_K,y_K)[1])
@@ -128,6 +130,7 @@ sprintf("Coeficiente de determinación: %s", rls_cd(x_K,y_K))
 sprintf("Varianza residual: %s", rls_var(x_K,y_K)[2])
 graphics.off()
 ```
+En este caso se usa el estimador de máxima verosimilitud para hacer el cálculo de la varianza de la variable independiente, aunque este es un estimador sesgado y como era de esperarse, y para la varianza residual se usa el estimador insesgado de la varianza poblacional. Se observa que el primero es menor que el segundo, como era de esperarse, debido a sus respectivos denominadores.
 ![](p1c.png)
 ```{r}
 #
@@ -137,7 +140,7 @@ mean(x_K)
 ```
 
 Encontramos que el ajuste que proporciona la regreción lineal no es muy bueno basandonos en el coeficiente de determinación.
-Tambien encontramos, como se puede ver en la gráfica, que para islas pequeñas los intervalos de confianza son pequeño y para las islas grandes crece este intervalo.
+Tambien encontramos, como se puede ver en la gráfica, que para islas pequeñas los intervalos de confianza son pequeños y para las islas grandes crece este intervalo.
 Esto nos indica que para hacer una predicción con una confianza del 95% no podremos acotar las respuestas en un intervalo pequeño.
 
 
@@ -167,15 +170,16 @@ plot(x_K,e_k,col='red')  #Scatterplot de la distribución del error
 abline(h=0,col='green')
 segments(x_K,0,x_K,e_k)  
 ```
-
-
-
+Se observa un error mucho más grande en el caso de los valores atípicos pero menor en el caso de los otros valores, lo cual hace que en última instancia, y comparando sus promedios (2214.7535 y 1883.6677), sea mejor hacer uso de la regresión que descarta esos valores atípicos, pero dependiendo del umbral que se le imponga al descartar, y de los datos en general, podría suceder todo lo contrario. En términos de varianza, se tiene 11866803.91 y 15257149.97, por lo que se concluye una mayor dispersión de los errores pero eso no es necesariamente algo negativo. Considerando que el coeficiente de determinación expresa numéricamente la proporción de la variabilidad del modelo, donde el valor esperado sería 1, y que los obtenidos por los modelos son 0.314688 y 0.304028, se tienen valores muy bajos pero el mejor modelo tiene una mayor variabilidad.
 ![](p2.png)
 ```{r}
 y_2 = P$Mass
 info_2 = lm(y_2~P$Fore+P$Bicep+P$Chest+P$Neck+P$Shoulder+P$Waist+P$Height+P$Calf+P$Thigh+P$Head)
 print(info_2$coefficients)
 ```
+Utilizando una notación de iniciales se obtendría el modelo de regresión lineal múltiple: 
+
+  $$\begin{eqnarray} m=`r toString(info_2$coefficients[1])`+`r toString(info_2$coefficients[2])`f+`r toString(info_2$coefficients[3])`b+`r toString(info_2$coefficients[4])`c \\ `r toString(info_2$coefficients[5])`n`r toString(info_2$coefficients[6])`s+`r toString(info_2$coefficients[7])`w+`r toString(info_2$coefficients[8])`h \\ +`r toString(info_2$coefficients[9])`ca+`r toString(info_2$coefficients[10])`t`r toString(info_2$coefficients[11])`he  \end{eqnarray}$$
 ![](p2a.png)
 ```{r}
 plot(y_2,info_2$residuals,col='red')  #Scatterplot de la distribución del error
@@ -192,10 +196,16 @@ segments(y_2_2,0,y_2_2,info_2_2$residual)
 ```
 
 ```{r}
-plot(y_2,info_2_2$residuals,col='red')  #Scatterplot de la distribución del error
-abline(h=0,col='green')
-segments(y_2,0,y_2,info_2_2$residual)
+#plot(y_2,info_2_2$residuals,col='red')  #Scatterplot de la distribución del error
+#abline(h=0,col='green')
+#segments(y_2,0,y_2,info_2_2$residual)
 ```
-
+Se observa que el valor del residuo no cambia si se le saca la raiz cúbica a la variable dependiente pero si los valores de $y$.
 ![](p2c.png)
-Aqui va parla jaja xd
+```{r}
+boxplot(info_2$residuals)
+```
+```{r}
+boxplot(info_2_2$residuals)
+```
+En el primer modelo se observa una distribución de erorres aparentemente sin valores atípicos, en lo cual difiere con el segundo modelo, ya que este presenta un valor atípico de 0.07840938. De acuerdo a la ubicación de la mediana en el segunmo modelo, se puede decir que este está sesgado hacia los valores positivos.
