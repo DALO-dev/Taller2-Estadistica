@@ -95,8 +95,9 @@ rls_cd <- function(x,y){
   b1=rls(x,y)[2]
   graphics.off()
   y_est=b1*x+b0
+  my=mean(y)
   SCE=sum((y-y_est)^2)
-  STCC=sum((y-mean(y))^2)
+  STCC=sum((y-my)^2)
   R2=1-SCE/STCC
   return(R2)
 }
@@ -204,7 +205,7 @@ segments(y_2_2,0,y_2_2,info_2_2$residual)
 #abline(h=0,col='green')
 #segments(y_2,0,y_2,info_2_2$residual)
 ```
-Encontramos que aunque la distribución de los residuos es la misma, el valor de $y$ se reduce mucho en la segunda gráfica lo que indica que esta gráfica provee una mejor regresión para los datos dados
+Encontramos que aunque la distribución de los residuos es la misma, el valor de $y$ se reduce mucho en la segunda gráfica lo que indica que esta gráfica provee una mejor regresión para los datos dados.
 ![](p2c.png)
 ```{r}
 boxplot(info_2$residuals)
@@ -212,4 +213,4 @@ boxplot(info_2$residuals)
 ```{r}
 boxplot(info_2_2$residuals)
 ```
-En el primer modelo se observa una distribución de erorres aparentemente sin valores atípicos, en lo cual difiere con el segundo modelo, ya que este presenta un valor atípico de 0.07840938. De acuerdo a la ubicación de la mediana en el segunmo modelo, se puede decir que este está sesgado hacia los valores positivos.
+En el primer modelo se observa una distribución de erorres aparentemente sin valores atípicos, en lo cual difiere con el segundo modelo, ya que este presenta un valor atípico de 0.07840938. De acuerdo a la ubicación de la mediana en el segunmo modelo, se puede decir que este está sesgado hacia los valores positivos. Analizando los diagramas de caja se evidencia una menor dispersión de los datos en el primer modelo, por lo que se podría decir que el primer modelo tiene una mejor predicción de los datos al no contener outliers ni sesgos.
